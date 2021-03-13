@@ -1,0 +1,175 @@
+#1
+CREATE TABLE cqupt_student(
+studentid VARCHAR(10),
+name VARCHAR(20),
+sex VARCHAR(2),
+age INTEGER,
+Fee DECIMAL(10,2),
+address VARCHAR(50),
+memo VARCHAR(300)--最后项无逗号
+);
+desc cqupt_student;
+#2
+show DATABASE
+USE anjoub;--使用指定数据库
+CREATE TABLE CourseAa(
+Aa1 VARCHAR(20),
+Aa2 INTEGER,
+Aa3 DECIMAL(10)
+);
+DESC CourseAa;
+#3
+USE anjoub;
+CREATE TABLE ChooseBb(
+Bb1 VARCHAR(30),
+Bb2 INTEGER,
+Bb3 DECIMAL(6)
+);
+DESC ChooseBb;
+#4
+ALTER TABLE choosebb ADD(Bb4 VARCHAR(20) DEFAULT'系统测试值' );--default设置默认值约束，默认为“系统测试值：
+#5
+ALTER TABLE choosebb ADD Bb5 VARCHAR (10) PRIMARY KEY;
+#8
+CREATE INDEX Index_bb2 ON choosebb(A ASC);--升序，默认
+CREATE INDEX Index_bb4 ON choosebb(B ASC);--降序
+#9
+DROP INDEX Index_bb2 ON choosebb;
+#10
+CREATE TABLE test(
+name1  VARCHAR(20),
+age int,
+score NUMERIC(10,2),
+address VARCHAR(60)
+);
+#11
+INSERT INTO test(name1,age,score,address) VALUES
+('赵一',20,580.00,'重邮宿舍 12-3-5'),
+('钱二',19,540.00,'南福苑5-2-9'),
+('孙三',21,555.50,'学生新区21-5-15'),
+('李四',22,505.00,'重邮宿舍8-6-22'),
+('周五',20,495.50,'学生新区23-4-8'),
+('吴六',19,435.00,'南福苑2-5-12');
+
+SELECT*FROM test;
+#12
+CREATE TABLE test_temp(
+Name1 varchar(20),
+Age INTEGER,
+Score NUMERIC(10,2),
+Address VARCHAR (60)
+);
+#13
+INSERT INTO test_temp(Name1,Age,Score,Address) VALUES
+('郑七',21,490.50,'重邮宿舍11-2-1'),
+('张八',20,560.00,'南福苑3-3-3'),
+('王九',10,515.00,'学生新区19-7-1');
+SELECT*from test_temp;
+#14
+INSERT INTO test SELECT * FROM test_temp;--把test_temp插入到test中去
+#15
+UPDATE test SET score=score+5 WHERE Age<=20;
+#16
+UPDATE test SET age=age-1 WHERE Address LIKE'南福苑%';--字符型用like 用‘=’不会报错，但无果，‘%’忽略部分，‘-’忽略一位
+#17
+DELETE FROM test WHERE age>21 AND score>=500;--‘*’一般代表全部的意思
+#18
+DELETE FROM test WHERE score<500 AND Address LIKE '重邮宿舍%';
+#19
+CREATE TABLE Student(
+SNO VARCHAR(20),
+Name1 VARCHAR(20),
+Age INTEGER,
+College VARCHAR(30)
+);
+DESC student;
+#20
+CREATE TABLE choose(
+SNO VARCHAR(20),
+CourseID VARCHAR(30),
+Score DECIMAL(5,2)
+);
+desc choose;
+#21
+CREATE TABLE Course(
+CourseID VARCHAR(15),
+CourseName VARCHAR(30),
+CourseBeforeID VARCHAR(15)
+);
+desc course;
+#22
+INSERT INTO Student(SNO,Name1,age,College) VALUES
+('S00001','张三',20,'计算机学院'),
+('S00002','李四',10,'通信学院'),
+('S00003','王五',21,'计算机学院');
+SELECT*FROM student;
+#23
+INSERT INTO Course(CourseID,CourseName,CourseBeforeID) VALUES
+('C1','计算机引论',NULL),
+('C2','C语言','C1'),
+('C3','数据结构','C2');
+SELECT*FROM course;
+#24
+INSERT INTO choose(SNO,CourseID,Score) VALUES
+('S00001','C1','95'),
+('S00001','C1','95'),
+('S00001','C2','80'),
+('S00001','C3','84'),
+('S00002','C1','80'),
+('S00002','C2','85'),
+('S00003','C1','78'),
+('S00003','C3','70');
+#25
+SELECT SNO,name1 FROM  student WHERE college LIKE'计算机学院';
+#26
+SELECT *FROM student WHERE age BETWEEN 20 AND 23;
+#27
+SELECT COUNT(*) FROM student;--‘*’全部
+#28
+SELECT MAX(Score),MIN(Score),SUM(Score),AVG(Score) FROM Choose WHERE CourseID LIKE 'C1';
+--select 要查询的 from 表名 where 限定
+#29
+SELECT courseid,coursename FROM course WHERE coursebeforeid is NULL;
+#30
+#31
+SELECT *FROM student t1
+ WHERE EXISTS
+(SELECT*FROM student t2 WHERE t2.College =t1.college and t2.name1='张三');
+#32
+SELECT SNO,Score FROM choose WHERE CourseID = 'C1' AND Score <ANY(
+SELECT Score FROM student,choose WHERE student.SNO=choose.SNO AND CourseID='C1' AND name1 ='张三'
+);--从内向外查询
+#33
+SELECT SNO FROM choose WHERE CourseID ='C1' union SELECT SNO FROM choose WHERE CourseID='C3';--相当于并列两个
+#34
+SELECT DISTINCT SNO FROM student
+WHERE SNO in(SELECT SNO FROM choose WHERE CourseID ='C1')
+UNION
+ SELECT DISTINCT SNO FROM student
+WHERE SNO in(SELECT SNO FROM choose WHERE CourseID ='C3')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
